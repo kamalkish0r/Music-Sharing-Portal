@@ -1,0 +1,30 @@
+{% extends 'music_share/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Upload Song</legend>
+        {{ form|crispy }}
+    </fieldset>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  
+  <!-- Add script to show/hide the allowed emails field based on visibility -->
+  <script>
+    const visibility = document.getElementById('visibility');
+    const allowedEmailsDiv = document.getElementById('allowed-emails');
+    const allowedEmailsInput = document.getElementById('allowed-emails-input');
+    
+    visibility.addEventListener('change', function() {
+      if (visibility.value === 'private' || visibility.value === 'protected') {
+        allowedEmailsDiv.style.display = 'block';
+        allowedEmailsInput.required = true;
+      } else {
+        allowedEmailsDiv.style.display = 'none';
+        allowedEmailsInput.required = false;
+      }
+    });
+  </script>
+{% endblock %}
