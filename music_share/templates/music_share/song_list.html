@@ -1,0 +1,52 @@
+{% extends 'music_share/base.html' %}
+
+{% block content %}
+  <h1>{{ page_title }}</h1>
+
+  <div class="row">
+    {% for song in object_list %}
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card h-100">
+          <img src="{% if song.album_art %}{{ song.album_art.url }}{% else %}https://via.placeholder.com/250x250.png?text=No+Image{% endif %}" class="card-img-top" alt="{{ song.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ song.title }}</h5>
+            <p class="card-text">{{ song.artist }}</p>
+            <p class="card-text">{{ song.album }}</p>
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'music_share-song-detail' song.id %}" class="btn btn-primary mr-2">View</a>
+            <a href="{% url 'music_share-play-song' song.id %}" class="btn btn-success mr-2">Play</a>
+            <a href="{% url 'music_share-download-song' song.id %}" class="btn btn-info">Download</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No songs available.</p>
+    {% endfor %}
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Song navigation">
+      <ul class="pagination">
+        {% if songs.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ songs.previous_page_number }}" tabindex="-1">Previous</a>
+          </li>
+        {% endif %}
+        {% for page_num in songs.paginator.page_range %}
+          {% if songs.number == page_num %}
+            <li class="page-item active"><a class="page-link" href="#">{{ page_num }} <span class="sr-only">(current)</span></a></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if songs.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ songs.next_page_number }}">Next</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+
+{% endblock %}
